@@ -1,0 +1,21 @@
+# Core geospatial and data handling libraries
+earthengine-api-v0.1.407
+pandas
+geopandas
+rasterio
+numpy
+scipy
+
+# Visualization
+matplotlib
+seaborn
+
+# Data retrieval and APIs
+requests
+tqdm
+
+# Utilities
+shapely
+python-dotenv
+ipykernel
+openpyxl 

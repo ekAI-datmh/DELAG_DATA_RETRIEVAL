@@ -589,9 +589,25 @@ if __name__=="__main__":
     # =============================================================================
     csv_file_path = "/mnt/hdd12tb/code/nhatvm/DELAG_data_retrieval/tay_nguyen_filtered_grids.csv"
     
-    # 🧪 TEST MODE CONFIGURATION FOR DATA CRAWLING
-    TEST_MODE_CRAWLING = False  # Set to False for full processing
-    MAX_TEST_ROIS = 2  # Number of ROIs to process in test mode
+    # =============================================================================
+    # HYPER-PARAMETERS FOR ROI SELECTION
+    # =============================================================================
+    # Use these parameters to select a subset of ROIs from the CSV file for processing.
+    # This is useful for testing, debugging, or processing the full dataset in smaller chunks.
+
+    # Set to True to activate the ROI subset selection below. 
+    # If False, all ROIs from the CSV will be processed.
+    SELECT_SUBSET_OF_ROIS = True
+
+    # Define the slice of ROIs to process from the list of all available ROIs.
+    # The ROIs are processed in the order they appear in the CSV file.
+    #
+    # Examples:
+    #   - slice(0, 10)    -> Processes the first 10 ROIs (indices 0 through 9).
+    #   - slice(10, 20)   -> Processes the next 10 ROIs (indices 10 through 19).
+    #   - slice(None)     -> Processes all ROIs (equivalent to setting SELECT_SUBSET_OF_ROIS to False).
+    #   - slice(0, None, 10) -> Processes every 10th ROI from the beginning.
+    ROI_SLICE = slice(0, 5)  # <-- EDIT THIS LINE TO CHANGE THE SELECTION
     
     print("Reading ROIs from CSV file...")
     all_roi_geometries = read_rois_from_csv(csv_file_path)
@@ -601,6 +617,35 @@ if __name__=="__main__":
         exit()
     else:
         print(f"Successfully loaded {len(all_roi_geometries)} ROI geometries from CSV.")
+
+    # Apply ROI subset selection if enabled
+    if SELECT_SUBSET_OF_ROIS:
+        print("\n" + "="*60)
+        print("ROI SUBSET SELECTION IS ENABLED")
+        print(f"Applying slice: {ROI_SLICE}")
+        print("="*60)
+        
+        # Convert dict items to a list to apply the slice, since dicts are not subscriptable
+        all_roi_items = list(all_roi_geometries.items())
+        
+        
+        
+        # Apply the slice to the list of items
+        selected_roi_items = all_roi_items[slice(0, len(all_roi_items)//2+10)]
+        print("**** Length of selected_roi_items: ",len(selected_roi_items))
+        
+        # Convert the selected list of items back to a dictionary
+        all_roi_geometries = dict(selected_roi_items)
+        
+        if not all_roi_geometries:
+            print("\n[WARNING] The selected slice resulted in 0 ROIs. Nothing to process.")
+            print("Please check your ROI_SLICE parameter. Exiting.")
+            exit()
+            
+        print(f"\nSelected {len(all_roi_geometries)} ROIs for processing:")
+        for roi_name in all_roi_geometries.keys():
+            print(f"  - {roi_name}")
+        print("="*60 + "\n")
     
     print("Starting data retrieval for each ROI (parallel)...")
 
