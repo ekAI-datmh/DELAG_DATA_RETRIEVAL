@@ -78,14 +78,19 @@ def main(lst_folder: str) -> None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description="Filter LST images in a folder by replacing pixel values outside the 260-340 range with NaN."
-    )
-    parser.add_argument(
-        '--lst_folder',
-        required=True,
-        help="The path to the folder containing the LST .tif files to be processed."
-    )
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(
+    #     description="Filter LST images in a folder by replacing pixel values outside the 260-340 range with NaN."
+    # )
+    # parser.add_argument(
+    #     '--lst_folder',
+    #     required=True,
+    #     help="The path to the folder containing the LST .tif files to be processed."
+    # )
+    # args = parser.parse_args()
     
-    main(args.lst_folder) 
+    for ROI in os.listdir('/mnt/hdd12tb/code/nhatvm/DELAG_data_retrieval/data_grid_base'):
+        for folder in os.listdir(os.path.join('/mnt/hdd12tb/code/nhatvm/DELAG_data_retrieval/data_grid_base', ROI)):
+            if os.path.isdir(os.path.join('/mnt/hdd12tb/code/nhatvm/DELAG_data_retrieval/data_grid_base', ROI, folder)):
+                if "lst" in folder:
+                    print(f"Processing {os.path.join('/mnt/hdd12tb/code/nhatvm/DELAG_data_retrieval/data_grid_base', ROI, folder)}")
+                    main(os.path.join('/mnt/hdd12tb/code/nhatvm/DELAG_data_retrieval/data_grid_base', ROI, folder)) 

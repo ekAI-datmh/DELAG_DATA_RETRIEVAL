@@ -542,11 +542,11 @@ def process_roi_with_validation(roi_tuple, big_folder, is_recrawl=False):
         # ------------------------------------------------
         # Individual datasets independent of composite list
         # ------------------------------------------------
-        print(f"--- {prefix} [{roi_name}] RVI ---")
-        main_rvi(start_date_ee, end_date_ee, geometry_obj, big_folder, roi_name)
+        # print(f"--- {prefix} [{roi_name}] RVI ---")
+        # main_rvi(start_date_ee, end_date_ee, geometry_obj, big_folder, roi_name)
 
-        print(f"--- {prefix} [{roi_name}] NDVI ---")
-        main_ndvi(start_date_ee, end_date_ee, geometry_obj, roi_name, big_folder)
+        # print(f"--- {prefix} [{roi_name}] NDVI ---")
+        # main_ndvi(start_date_ee, end_date_ee, geometry_obj, roi_name, big_folder)
 
         # Validate images after crawling
         print(f"--- {prefix} [{roi_name}] VALIDATING IMAGES ---")
@@ -589,6 +589,8 @@ if __name__=="__main__":
     # =============================================================================
     csv_file_path = "/mnt/hdd12tb/code/nhatvm/DELAG_data_retrieval/tay_nguyen_filtered_grids.csv"
     
+    
+    
     # =============================================================================
     # HYPER-PARAMETERS FOR ROI SELECTION
     # =============================================================================
@@ -607,7 +609,7 @@ if __name__=="__main__":
     #   - slice(10, 20)   -> Processes the next 10 ROIs (indices 10 through 19).
     #   - slice(None)     -> Processes all ROIs (equivalent to setting SELECT_SUBSET_OF_ROIS to False).
     #   - slice(0, None, 10) -> Processes every 10th ROI from the beginning.
-    ROI_SLICE = slice(0, 5)  # <-- EDIT THIS LINE TO CHANGE THE SELECTION
+
     
     print("Reading ROIs from CSV file...")
     all_roi_geometries = read_rois_from_csv(csv_file_path)
@@ -622,16 +624,15 @@ if __name__=="__main__":
     if SELECT_SUBSET_OF_ROIS:
         print("\n" + "="*60)
         print("ROI SUBSET SELECTION IS ENABLED")
-        print(f"Applying slice: {ROI_SLICE}")
         print("="*60)
         
         # Convert dict items to a list to apply the slice, since dicts are not subscriptable
         all_roi_items = list(all_roi_geometries.items())
         
-        
+        ROI_SLICE = slice(0, len(all_roi_items)//2+10)
         
         # Apply the slice to the list of items
-        selected_roi_items = all_roi_items[slice(0, len(all_roi_items)//2+10)]
+        selected_roi_items = all_roi_items[ROI_SLICE]
         print("**** Length of selected_roi_items: ",len(selected_roi_items))
         
         # Convert the selected list of items back to a dictionary
